@@ -18,7 +18,7 @@ data class CreditView(
     constructor(credit: Credit): this(
         creditCode = credit.creditCode,
         creditValue = credit.creditValue,
-        numberOfInstallments = credit.numberOfInstallment,
+        numberOfInstallments = credit.numberOfInstallments,
         status = credit.status,
         emailCustomer = credit.customer?.email,
         incomeCustomer = credit.customer?.income,
