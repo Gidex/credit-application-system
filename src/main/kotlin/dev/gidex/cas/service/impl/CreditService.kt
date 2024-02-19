@@ -1,6 +1,7 @@
 package dev.gidex.cas.service.impl
 
 import dev.gidex.cas.entity.Credit
+import dev.gidex.cas.exception.BusinessException
 import dev.gidex.cas.repository.CreditRepository
 import dev.gidex.cas.service.ICreditService
 import org.springframework.stereotype.Service
@@ -22,8 +23,8 @@ class CreditService(
         this.creditRepository.findAllByCustomerId(customerId)
 
     override fun findByCreditCode(customerId: Long, creditCode: UUID): Credit {
-        val credit = this.creditRepository.findByCreditCode(creditCode) ?: throw  RuntimeException("Credit code $creditCode not found")
+        val credit = this.creditRepository.findByCreditCode(creditCode) ?: throw  BusinessException("Credit code $creditCode not found")
 
-        return if (credit.customer?.id == customerId) credit else throw RuntimeException("Contact admin")
+        return if (credit.customer?.id == customerId) credit else throw IllegalArgumentException("Contact admin")
     }
 }

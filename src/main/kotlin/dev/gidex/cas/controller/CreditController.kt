@@ -4,6 +4,7 @@ import dev.gidex.cas.dto.CreditDto
 import dev.gidex.cas.dto.CreditView
 import dev.gidex.cas.dto.SimpleCreditView
 import dev.gidex.cas.service.impl.CreditService
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -14,8 +15,7 @@ import java.util.UUID
 class CreditController(private val creditService: CreditService) {
 
     @PostMapping
-    fun saveCredit(@RequestBody creditDto: CreditDto): ResponseEntity<String> {
-        println(creditDto)
+    fun saveCredit(@RequestBody @Valid creditDto: CreditDto): ResponseEntity<String> {
         val credit = this.creditService.save(creditDto.toEntity())
         return ResponseEntity.status(HttpStatus.CREATED)
             .body("Credit ${credit.creditCode} - Customer ${credit.customer?.email} saved!")
