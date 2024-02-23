@@ -1,5 +1,7 @@
 package dev.gidex.cas.exception
 
+import org.hibernate.exception.ConstraintViolationException
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.FieldError
@@ -33,13 +35,26 @@ class RestExceptionHandler {
         )
     }
 
+    @ExceptionHandler(DataIntegrityViolationException::class)
+    fun handlerValidException(ex: DataIntegrityViolationException): ResponseEntity<ExceptionDetails> {
+        return ResponseEntity(
+            ExceptionDetails(
+                title = "Conflict! consult the documentation",
+                timestamp = LocalDate.now(),
+                status = HttpStatus.CONFLICT.value(),
+                exception = ex.javaClass.toString(),
+                details = mutableMapOf(ex.cause.toString() to ex.message)
+            ), HttpStatus.CONFLICT
+        )
+    }
+
     @ExceptionHandler(IllegalArgumentException::class)
     fun handlerValidException(ex: IllegalArgumentException): ResponseEntity<ExceptionDetails> {
         return ResponseEntity(
             ExceptionDetails(
                 title = "Conflict! consult the documentation",
                 timestamp = LocalDate.now(),
-                status = HttpStatus.BAD_REQUEST.value(),
+                status = HttpStatus.CONFLICT.value(),
                 exception = ex.javaClass.toString(),
                 details = mutableMapOf(ex.cause.toString() to ex.message)
             ), HttpStatus.CONFLICT
@@ -50,12 +65,12 @@ class RestExceptionHandler {
     fun handlerValidException(ex: BusinessException): ResponseEntity<ExceptionDetails> {
         return ResponseEntity(
             ExceptionDetails(
-                title = "Conflict! consult the documentation",
+                title = "Bad request! consult the documentation",
                 timestamp = LocalDate.now(),
                 status = HttpStatus.BAD_REQUEST.value(),
                 exception = ex.javaClass.toString(),
                 details = mutableMapOf(ex.cause.toString() to ex.message)
-            ), HttpStatus.CONFLICT
+            ), HttpStatus.BAD_REQUEST
         )
     }
 }
